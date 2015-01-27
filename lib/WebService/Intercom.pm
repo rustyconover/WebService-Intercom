@@ -1,78 +1,13 @@
 use Moops -strict;
 
 # ABSTRACT: interfaces with Intercom.io
-
-=pod
-
-=head1 NAME
-
-WebService::Intercom - interact with the Intercom.io API
-
-=head1 SYNOPSIS
-
-  my $intercom = WebService::Intercom->new(app_id => '[APP ID]',
-                                           api_key => '[API KEY]');
-
-  # Create a user
-  my $user = $intercom->user_create_or_update(
-     email => 'test@example.com', 
-     name => 'test user');
-  
-  # Retrieve an existing user.
-  my $existing_user = $intercom->user_get(email => 'test2@example.com');
-
-  # Add a tag to a user
-  $user->tag('test tag');
-  $intercom->tag_create_or_update(name => "test tag");
-  $intercom->tag_items(name => "test tag", users => [{ email => 'test@example.com'}]);
-  $user->untag('test tag');
-
-  # Change the user's name
-  $user->name = 'new name';
-  $user->save();
-
-  # Delete the user
-  $user->delete();
-  $intercom->user_delete(email => 'test@example.com');
-
-  # Add a note
-  $user->add_note(body => "This is a test note");
-  $intercom->note_create(email => 'test@example.com',
-                         body => "This is a test note");
- 
-  # Add an event
-  $user->add_event(event_name => 'test event');
-  $intercom->event_create(email => 'test@example.com',
-                          event_name => 'test event',
-                          metadata => {
-                             "article" =>  {"url" =>  "https://example.org/",
-                                            "value" => "link text"},
-                          });
-
-=head1 DESCRIPTION
-
-Provides a nice API for Intercom.io rather than making raw requests.
-
-=head1 IMPLEMENTATION PHILOSOPHY
-
-This module attempts to stick as close to the API as possible.
-
-Documentation for the v2 API:
-
-L<http://doc.intercom.io/api/>
-
-For examples see the test cases, most functionality is well exercised
-via tests.
-
-=cut   
-
+# PODNAME: WebService::Intercom
                                            
 use WebService::Intercom::Types;
 use WebService::Intercom::User;
 use WebService::Intercom::Tag;
 use WebService::Intercom::Note;
 use WebService::Intercom::Exception;
-
 
 class WebService::Intercom types WebService::Intercom::Types {
     use strict;
@@ -514,6 +449,73 @@ Returns undef.
     }    
 }
 
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+WebService::Intercom - interact with the Intercom.io API
+
+=head1 SYNOPSIS
+
+  my $intercom = WebService::Intercom->new(app_id => '[APP ID]',
+                                           api_key => '[API KEY]');
+
+  # Create a user
+  my $user = $intercom->user_create_or_update(
+     email => 'test@example.com', 
+     name => 'test user');
+  
+  # Retrieve an existing user.
+  my $existing_user = $intercom->user_get(email => 'test2@example.com');
+
+  # Add a tag to a user
+  $user->tag('test tag');
+  $intercom->tag_create_or_update(name => "test tag");
+  $intercom->tag_items(name => "test tag", users => [{ email => 'test@example.com'}]);
+  $user->untag('test tag');
+
+  # Change the user's name
+  $user->name = 'new name';
+  $user->save();
+
+  # Delete the user
+  $user->delete();
+  $intercom->user_delete(email => 'test@example.com');
+
+  # Add a note
+  $user->add_note(body => "This is a test note");
+  $intercom->note_create(email => 'test@example.com',
+                         body => "This is a test note");
+ 
+  # Add an event
+  $user->add_event(event_name => 'test event');
+  $intercom->event_create(email => 'test@example.com',
+                          event_name => 'test event',
+                          metadata => {
+                             "article" =>  {"url" =>  "https://example.org/",
+                                            "value" => "link text"},
+                          });
+
+=head1 DESCRIPTION
+
+Provides a nice API for Intercom.io rather than making raw requests.
+
+=head1 IMPLEMENTATION PHILOSOPHY
+
+This module attempts to stick as close to the API as possible.
+
+Documentation for the v2 API:
+
+L<http://doc.intercom.io/api/>
+
+For examples see the test cases, most functionality is well exercised
+via tests.
+
+=cut   
 
 =head1 SEE ALSO
 
@@ -537,4 +539,5 @@ THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, 
 
 =cut
 
+    
 1;
