@@ -68,16 +68,15 @@ via tests.
 =cut   
 
 
+use WebService::Intercom::Exception;
 use WebService::Intercom::Types;
 use WebService::Intercom::User;
 use WebService::Intercom::Tag;
 use WebService::Intercom::Note;
-use WebService::Intercom::Exception;
+use WebService::Intercom::Message;
+use WebService::Intercom::Admin;
 
 class WebService::Intercom types WebService::Intercom::Types {
-    use strict;
-    use warnings;
-
     use LWP::UserAgent;
     use HTTP::Response;
     use HTTP::Request::Common qw(DELETE POST GET);
@@ -86,7 +85,7 @@ class WebService::Intercom types WebService::Intercom::Types {
     use Kavorka qw( multi method );
 
 
-    has 'ua' => (is => 'ro', default => sub { return LWP::UserAgent->new() } );
+    has 'ua' => (is => 'ro', default => sub { return LWP::UserAgent->new(keep_alive => 10, agent => "WebService::Intercom/1.0") } );
     has 'app_id' => (is => 'ro');
     has 'api_key' => (is => 'ro');
 
@@ -461,6 +460,60 @@ Returns undef.
     }
 
 
+=head2 create_message
+
+Create a message, can be user or admin initiated.
+
+  # When you have an existing WebService::Intercom::User
+  $intercom->create_message(MessagePersonType :$from,
+                          Maybe[MessagePersonType] :$to,
+                          Str :$body,
+                          Maybe[Str] :$subject?,
+                          Maybe[StrMatch[qr/^(plain|personal)$/]] :$template,
+                          StrMatch[qr/^(inapp|email)$/] :$message_type);
+
+Returns a L<WebService::Intercom::Message>.
+
+=cut
+    
+    method create_message(MessagePersonType :$from,
+                          Maybe[MessagePersonType] :$to,
+                          Str :$body,
+                          Maybe[Str] :$subject?,
+                          Maybe[StrMatch[qr/^(plain|personal)$/]] :$template,
+                          StrMatch[qr/^(inapp|email)$/] :$message_type) {
+
+        if (defined($message_type) && $message_type eq 'email') {
+            defined($subject) || WebService::Intercom::Exception->throw({ message => "Subject is required for email message"});
+        }        
+        
+        my $json_content = {
+            from => $from,
+            (defined($to) ? (to => $to) : ()),
+            (defined($subject) ? (subject => $subject) : ()),
+            (defined($template) ? (template => $template) : ()),
+            (defined($message_type) ? (message_type => $message_type) : ()),
+            body => $body,
+        };
+
+        my $request = POST($self->api_base . '/messages',
+                           'Content-Type' => 'application/json',
+                           Content => JSON::XS::encode_json($json_content)
+                       );
+
+        return $self->_request($request);
+    }
+
+
+    method get_admins() {
+        my $request = GET($self->api_base . '/admins/',
+                           'Content-Type' => 'application/json');
+                      
+        return $self->_request($request);
+    }
+
+
+    
     method _request(HTTP::Request $request,  Bool :$no_content?) {
         $request->header('Accept', 'application/json');
         $request->header('Authorization' => "Basic " . MIME::Base64::encode_base64($self->app_id . ":" . $self->api_key, ''));
@@ -477,11 +530,17 @@ Returns undef.
 
                     WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result for request " . $request->as_string() . "\nResult was: " . $response->as_string()});
                 }
-                if ($data->{type} =~ /^(user|tag|note)$/) {
-                    return ("WebService::Intercom::" . ucfirst($1))->new({
+                if ($data->{type} =~ /^(user|tag|note|user_message|admin_message)$/) {
+                    my $name = $1;
+                    my $class_name = "WebService::Intercom::" . ucfirst($1);
+                    $class_name =~ s/(?:user_message|admin_message)$/Message/ig;
+                    return $class_name->new({
                         %$data,
                         intercom => $self,
                     });
+                } elsif ($data->{type} eq 'admin.list') {
+                    my @admins = map { WebService::Intercom::Admin->new($_) } @{$data->{admins}};
+                    return \@admins;
                 } elsif ($data->{type} eq 'error.list') {
                     WebService::Intercom::Exception->throw(
                         request_id => $data->{request_id},
@@ -514,6 +573,7 @@ Returns undef.
     }    
 }
 
+    
 1;
 
 __END__

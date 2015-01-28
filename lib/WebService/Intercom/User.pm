@@ -46,25 +46,45 @@ Attributes are defined at L<http://doc.intercom.io/api/#users>
 =over
 
 =item type
+
 =item id
+
 =item created_at
+
 =item signed_up_at
+
 =item updated_at
+
 =item user_id
+
 =item email
+
 =item name
+
 =item custom_attributes
+
 =item last_request_at
+
 =item session_count
+
 =item avatar
+
 =item unsubscribed_from_emails
+
 =item location_data
+
 =item user_agent_data
+
 =item last_seen_ip
+
 =item companies
+
 =item social_profiles
+
 =item segments
+
 =item tags
+
 =item intercom - the WebService::Intercom object that created this user object
 
 =back
@@ -92,7 +112,6 @@ updated user.
 =back
 
 =cut
-
 
 class WebService::Intercom::User types WebService::Intercom::Types {
     has 'type' => (is => 'ro');
@@ -174,4 +193,5 @@ class WebService::Intercom::User types WebService::Intercom::Types {
                                       created_at => $created_at,
                                       metadata => $metadata);
     }
-}
+};
+1;

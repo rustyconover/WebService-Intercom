@@ -20,11 +20,17 @@ Attributes are defined at L<http://doc.intercom.io/api/#notes>
 =over
 
 =item type
+
 =item id
+
 =item created_at
+
 =item user
+
 =item body
+
 =item author
+
 =item intercom - the WebService::Intercom object that created this user object
 
 =back
@@ -38,4 +44,6 @@ class WebService::Intercom::Note types WebService::Intercom::Types {
     has 'user' => (is => 'ro');
     has 'body' => (is => 'ro', isa => Str);
     has 'author' => ('is' => 'ro', isa => Maybe[Str]);
-}
+};
+
+1;

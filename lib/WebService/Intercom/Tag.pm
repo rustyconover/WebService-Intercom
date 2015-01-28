@@ -26,8 +26,11 @@ Tags are defined at L<http://doc.intercom.io/api/#tags>
 =over
 
 =item type
+
 =item id
+
 =item name
+
 =item intercom - the WebService::Intercom object that created this user object
 
 =back
@@ -60,4 +63,6 @@ class WebService::Intercom::Tag types WebService::Intercom::Types {
     method delete() {
         $self->intercom->tag_delete($self);
     }
-}
+};
+
+1;

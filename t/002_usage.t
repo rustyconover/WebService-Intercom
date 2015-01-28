@@ -63,6 +63,56 @@ object_ok(
 );
 
 
+
+my $message = $obj->create_message(from => { email => $test_email, type => 'user'},
+                                   body => 'test user initiated message');
+
+ok(defined($message), "User initiated message is defined");
+
+object_ok(
+    sub {
+        $message;
+    },
+    '$message',
+    isa => [qw(WebService::Intercom::Message)],
+    clean => 1
+);
+
+my $admins = $obj->get_admins();
+
+ok(defined($admins), "Got defined admins results");
+
+ok(scalar(@$admins) > 0, "More than once admin found");
+
+object_ok(
+    sub {
+        $admins->[0];
+    },
+    '$admins->[0]',
+    isa => [qw(WebService::Intercom::Admin)],
+    clean => 1
+);
+
+
+$message = $obj->create_message(from => { type => 'admin', id => $admins->[0]->id},
+                                to  => { email => $test_email, type => 'user'},
+                                subject => 'test message subject',
+                                body => 'test admin message',
+                                message_type => 'email'
+                            );
+
+ok(defined($message), "Admin initiated message is defined");
+
+object_ok(
+    sub {
+        $message;
+    },
+    '$message',
+    isa => [qw(WebService::Intercom::Message)],
+    clean => 1
+);
+
+
 $user = $obj->user_get(email => $test_email);
 ok(defined($user), "Result is defined for retrieving a user");
 

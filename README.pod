@@ -178,6 +178,20 @@ Creates an event for a user
 
 Returns undef.
 
+=head2 create_message
+
+Create a message, can be user or admin initiated.
+
+  # When you have an existing WebService::Intercom::User
+  $intercom->create_message(MessagePersonType :$from,
+                          Maybe[MessagePersonType] :$to,
+                          Str :$body,
+                          Maybe[Str] :$subject?,
+                          Maybe[StrMatch[qr/^(plain|personal)$/]] :$template,
+                          StrMatch[qr/^(inapp|email)$/] :$message_type);
+
+Returns a L<WebService::Intercom::Message>.
+
 =head1 SEE ALSO
 
 See L<Moops> and L<Kavorka> to understand parameter signatures.

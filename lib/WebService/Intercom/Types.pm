@@ -19,9 +19,19 @@ library WebService::Intercom::Types
     SegmentType,
     TagsListType,
     TagUserIdentifierType,
-    TagCompanyIdentifierType
-    
+    TagCompanyIdentifierType,
+    MessagePersonType
     {
+        
+        declare "MessagePersonType", as Dict[
+            type => StrMatch[qr/^(admin|user)$/],
+            user_id => Optional[Str],
+            email => Optional[Str],
+            id => Optional[Str]
+        ];
+        coerce MessagePersonType, from HashRef, via {
+            MessagePersonType->new($_);
+        };
         
         declare "CustomAttributeNameType", as StrMatch[qr/^[^[.\$]+$/];
         declare "IPAddressType", as StrMatch[qr/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/];
@@ -100,15 +110,15 @@ library WebService::Intercom::Types
                                       image_url => Maybe[Str]];
 
         declare "LocationDataType", as Dict[type => Str,
-                                        city_name => Maybe[Str],
-                                        continent_code => Maybe[Str],
-                                        country_code => Maybe[Str],
-                                        country_name => Maybe[Str],
-                                        latitude => Maybe[Num],
-                                        longitude => Maybe[Num],
-                                        postal_code => Maybe[Str],
-                                        region_name => Maybe[Str],
-                                        timezone => Maybe[Str]
+                                            city_name => Maybe[Str],
+                                            continent_code => Maybe[Str],
+                                            country_code => Maybe[Str],
+                                            country_name => Maybe[Str],
+                                            latitude => Maybe[Num],
+                                            longitude => Maybe[Num],
+                                            postal_code => Maybe[Str],
+                                            region_name => Maybe[Str],
+                                            timezone => Maybe[Str]
                                         ];
 
         declare "CompaniesListType", as Dict[type => Str,
