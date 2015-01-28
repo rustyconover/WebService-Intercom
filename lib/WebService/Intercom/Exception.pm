@@ -34,8 +34,8 @@ class WebService::Intercom::Exception with ::Throwable {
         my %CarpInternal = ("WebService::Intercom::Exception" => 1,
                             "Throwable" => 1);
         
-        has 'code' => (is => 'ro', isa => Maybe[Str]);
-        has 'request_id' => (is => 'ro', isa => Maybe[Str]);
+        has 'code' => (is => 'ro');
+        has 'request_id' => (is => 'ro');
         has 'message' => (is => 'ro', isa => 'Maybe[Str]', required => 1);
         has 'stack' => (is => 'ro', default => sub {
                             my ($level, @caller, %ctxt) = 0;
