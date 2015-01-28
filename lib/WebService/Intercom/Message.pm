@@ -1,6 +1,6 @@
 use Moops -strict;
 
-# ABSTRACT: represents a note
+# ABSTRACT: represents a message
 
 =pod
 

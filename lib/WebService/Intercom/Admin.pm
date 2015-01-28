@@ -1,6 +1,6 @@
 use Moops -strict;
 
-# ABSTRACT: represents a note
+# ABSTRACT: represents an admin
 
 =pod
 
@@ -10,11 +10,8 @@ WebService::Intercom::Admin - represent an admin
 
 =head1 SYNOPSIS
 
-  my $message = $intercom->create_message(from => {type => 'admin', id => 'test' }, 
-                                          body => 'test message',
-                                          template => 'personal',
-                                          message_type => 'email',
-                                          subject => 'test subject');
+  my $admins = $intercom->get_admins();
+  my $first_admin = $admins->[0];
 
 =head2 ATTRIBUTES
 
