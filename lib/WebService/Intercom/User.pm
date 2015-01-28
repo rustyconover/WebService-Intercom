@@ -116,24 +116,24 @@ updated user.
 class WebService::Intercom::User types WebService::Intercom::Types {
     has 'type' => (is => 'ro');
     has 'id' => (is => 'ro');
-    has 'created_at' => (is => 'rw', isa => Int);
-    has 'signed_up_at' => (is => 'rw', isa => Int);
-    has 'updated_at' => (is => 'rw', isa => Int);
-    has 'user_id' => (is => 'rw', isa => Str);
-    has 'email' => (is => 'rw', isa => Str);
-    has 'name' => (is => 'rw', isa => Str);
-    has 'custom_attributes' => (is => 'rw', isa => CustomAttributesType);
-    has 'last_request_at' => (is => 'rw', isa => Int);
-    has 'session_count' => (is => 'ro', isa => Int);
-    has 'avatar' => (is => 'ro', isa => AvatarType);
-    has 'unsubscribed_from_emails' => (is => 'rw', isa => Bool);
-    has 'location_data' => (is => 'ro', isa => LocationDataType);
-    has 'user_agent_data' => (is => 'ro', isa => Str);
-    has 'last_seen_ip' => (is => 'ro', isa => IPAddressType);
-    has 'companies' => (is => 'ro', isa => CompaniesListType);
-    has 'social_profiles' => (is => 'ro', isa => SocialProfileListType);
-    has 'segments' => (is => 'ro', isa => SegmentsListType);
-    has 'tags' => (is => 'ro', isa => TagsListType);
+    has 'created_at' => (is => 'rw', isa => Maybe[Int]);
+    has 'signed_up_at' => (is => 'rw', isa => Maybe[Int]);
+    has 'updated_at' => (is => 'rw', isa => Maybe[Int]);
+    has 'user_id' => (is => 'rw', isa => Maybe[Str]);
+    has 'email' => (is => 'rw', isa => Maybe[Str]);
+    has 'name' => (is => 'rw', isa => Maybe[Str]);
+    has 'custom_attributes' => (is => 'rw', isa => Maybe[CustomAttributesType]);
+    has 'last_request_at' => (is => 'rw', isa => Maybe[Int]);
+    has 'session_count' => (is => 'ro', isa => Maybe[Int]);
+    has 'avatar' => (is => 'ro', isa => Maybe[AvatarType]);
+    has 'unsubscribed_from_emails' => (is => 'rw', isa => Maybe[Bool]);
+    has 'location_data' => (is => 'ro', isa => Maybe[LocationDataType]);
+    has 'user_agent_data' => (is => 'ro', isa => Maybe[Str]);
+    has 'last_seen_ip' => (is => 'ro', isa => Maybe[IPAddressType]);
+    has 'companies' => (is => 'ro', isa => Maybe[CompaniesListType]);
+    has 'social_profiles' => (is => 'ro', isa => Maybe[SocialProfileListType]);
+    has 'segments' => (is => 'ro', isa => Maybe[SegmentsListType]);
+    has 'tags' => (is => 'ro', isa => Maybe[TagsListType]);
 
     has 'intercom' => (is => 'ro', isa => InstanceOf["WebService::Intercom"], required => 1);
 

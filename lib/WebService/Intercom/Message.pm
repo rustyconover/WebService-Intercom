@@ -41,8 +41,8 @@ class WebService::Intercom::Message types WebService::Intercom::Types {
     has 'type' => (is => 'ro');
     has 'id' => (is => 'ro');
     has 'body' => (is => 'ro', isa => Str);
-    has 'message_type' => (is => 'ro', isa => Str);
-    has 'template' => (is => 'ro', isa => Str);
+    has 'message_type' => (is => 'ro', isa => Maybe[Str]);
+    has 'template' => (is => 'ro', isa => Maybe[Str]);
     has 'owner' => (is => 'ro');
     has 'created_at' => (is => 'ro');
     has 'intercom' => (is => 'ro');

@@ -174,7 +174,7 @@ Returns a L<WebService::Intercom::User> that represents the new or updated user.
                                        Maybe[Str] :$email?,
                                        Maybe[Str] :$id?,
                                        Maybe[Int] :$signed_up_at?,
-                                       Str :$name?,
+                                       Maybe[Str] :$name?,
                                        Maybe[IPAddressType] :$last_seen_ip?,
                                        CustomAttributesType :$custom_attributes?,
                                        Maybe[Str] :$last_seen_user_agent?,
@@ -183,7 +183,6 @@ Returns a L<WebService::Intercom::User> that represents the new or updated user.
                                        Maybe[Bool] :$unsubscribed_from_emails?,
                                        Maybe[Bool] :$update_last_request_at?,
                                        Maybe[Bool] :$new_session?) {
-
 
         my $json_content = {
             signed_up_at => $signed_up_at,
@@ -531,13 +530,19 @@ Returns a L<WebService::Intercom::Message>.
                     WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result for request " . $request->as_string() . "\nResult was: " . $response->as_string()});
                 }
                 if ($data->{type} =~ /^(user|tag|note|user_message|admin_message)$/) {
-                    my $name = $1;
                     my $class_name = "WebService::Intercom::" . ucfirst($1);
                     $class_name =~ s/(?:user_message|admin_message)$/Message/ig;
-                    return $class_name->new({
-                        %$data,
-                        intercom => $self,
-                    });
+                    my $r;
+                    eval {
+                        $r = $class_name->new({
+                            %$data,
+                            intercom => $self,
+                        });
+                    };
+                    if ($@) {
+                        WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result to object " . $request->as_string() . "\nResult was: " . $response->as_string()});
+                    }
+                    return $r;
                 } elsif ($data->{type} eq 'admin.list') {
                     my @admins = map { WebService::Intercom::Admin->new($_) } @{$data->{admins}};
                     return \@admins;
