@@ -48,9 +48,9 @@ library WebService::Intercom::Types
         };
         
         declare "SocialProfileType", as Dict[type => Str,
-                                             name => Str,
-                                             username => Str,
-                                             url => Str,
+                                             name => Maybe[Str],
+                                             username => Maybe[Str],
+                                             url => Maybe[Str],
                                              id => Maybe[Str]
                                          ];
         coerce SocialProfileType, from HashRef, via {

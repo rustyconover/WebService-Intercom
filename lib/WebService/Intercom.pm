@@ -526,8 +526,7 @@ Returns a L<WebService::Intercom::Message>.
                     $data = JSON::XS::decode_json($response->content());
                 };
                 if ($@) {
-
-                    WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result for request " . $request->as_string() . "\nResult was: " . $response->as_string()});
+                    WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result for request: " . $@ . "\n" . $request->as_string() . "\nResult was: " . $response->as_string()});
                 }
                 if ($data->{type} =~ /^(user|tag|note|user_message|admin_message)$/) {
                     my $class_name = "WebService::Intercom::" . ucfirst($1);
@@ -540,7 +539,7 @@ Returns a L<WebService::Intercom::Message>.
                         });
                     };
                     if ($@) {
-                        WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result to object " . $request->as_string() . "\nResult was: " . $response->as_string()});
+                        WebService::Intercom::Exception->throw({ message => "Failed to decode JSON result to object: " . $@ . "\n" . $request->as_string() . "\nResult was: " . $response->as_string()});
                     }
                     return $r;
                 } elsif ($data->{type} eq 'admin.list') {
